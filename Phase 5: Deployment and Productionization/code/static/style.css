@@ -1,0 +1,7 @@
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+body {
+    word-break: break-word;
+}

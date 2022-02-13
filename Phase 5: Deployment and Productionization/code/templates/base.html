@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Sanjay Chouhan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.jpg') }}" type="image/jpeg" sizes="16x16">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="w3-flat-silver">
+    <div class="w3-container form-container-wrapper w3-padding-32 w3-large">
+        <div class="w3-card-4 form-container w3-flat-clouds">
+            <div class="w3-container w3-blue-grey w3-center">
+                <h2>Calculate Match percentage of Resume for a Job description</h2>
+            </div>
+            {% block maincontent %}{% endblock %}
+            <div class="w3-container w3-blue-grey">
+                <p>Git repo:- <a target="_blank" href="https://github.com/scsanjay/jd_resume_match_percentage">https://github.com/scsanjay/jd_resume_match_percentage</a></p>
+                <p>Developed by <a target="_blank" href="https://sanjayc.net">Sanjay Chouhan</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
