@@ -2,7 +2,8 @@
 
 {% block maincontent %}
 <div class="w3-container">    
-    <h5 class="w3-text-blue-grey">Match percentage is <button type="button" class="w3-button w3-amber w3-hover-amber w3-round w3-padding-small">{{ prediction }}</button>.</h5>
+    <h4 class="w3-text-blue-grey">Match percentage is <button type="button" class="w3-button w3-amber w3-hover-amber w3-round w3-padding-small">{{ prediction }}</button>.</h4>
+    <p>Predicted in {{executiontime}} seconds.</p>
     <p style="text-align:center"><a href="/"><button type="button" class="w3-btn w3-blue-grey">Go back, and try another!</button></a></p>
 </div>
 {% endblock %}

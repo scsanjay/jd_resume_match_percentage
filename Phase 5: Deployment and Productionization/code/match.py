@@ -6,6 +6,7 @@ from helper import *
 import flask
 import os
 import numpy as np
+import time
 
 app = Flask(__name__)
 
@@ -41,6 +42,7 @@ def predict():
         flash('File format not allowed.')
         return redirect(request.url)
 
+    startTime = time.time()
     # load preprocessed jd
     jd_processed = load('models/jd_processed.joblib')
     # load and get the text from pdf
@@ -121,8 +123,9 @@ def predict():
 
     # predict the o/p
     prediction = np.round(knn_model_meta.predict(X_ensemble), 2)
+    endTime = time.time()
 
-    return flask.render_template('predict.html', prediction=str(prediction[0])+'%')
+    return flask.render_template('predict.html', executiontime=np.round(endTime-startTime, 2), prediction=str(prediction[0])+'%')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

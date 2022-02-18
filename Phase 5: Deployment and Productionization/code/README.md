@@ -4,7 +4,7 @@
 `sudo apt install python3-pip gunicorn python3-flask`
 
 ### To install the required python libraries
-`pip install Flask numpy pandas pdfplumber matplotlib  fuzzywuzzy fuzzywuzzy[speedup] joblib gunicorn nltk gensim scikit-learn==0.24.2  python-Levenshtein`
+`pip install Flask numpy pandas pdfplumber matplotlib  fuzzywuzzy fuzzywuzzy[speedup] joblib gunicorn nltk gensim time scikit-learn==0.24.2  python-Levenshtein`
 
 Need to download some nltk files,
 `python -m nltk.downloader stopwords wordnet omw-1.4`
