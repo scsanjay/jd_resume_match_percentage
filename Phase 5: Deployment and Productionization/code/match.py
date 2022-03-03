@@ -24,6 +24,31 @@ def allowed_file(filename):
 def index():
     return flask.render_template('index.html')
 
+# load preprocessed jd
+jd_processed = load('models/jd_processed.joblib')
+# load BoW representation of jd
+bow_jd = load('models/bow_jd.joblib')
+# load BoW model
+vectorizer = load('models/vectorizer.joblib')
+# get selected features after forward feature selection
+with open('models/selected_features1.npy', 'rb') as f:
+    features1 = np.load(f, allow_pickle=True)
+# load w2v representation of jd
+w2v_jd = load('models/w2v_jd.joblib')
+# get selected features after forward feature selection
+with open('models/selected_features2.npy', 'rb') as f:
+    features2 = np.load(f, allow_pickle=True)
+# load standard scaler for bow
+scaler1 = load('models/scaler1.joblib')
+# load standard scaler for w2v
+scaler2 = load('models/scaler2.joblib')
+# load first base model
+svr_model_linear_1 = load('models/svr_model_linear_1.joblib')
+# load second base model
+lr_model_2 = load('models/lr_model_2.joblib')
+# load meta regressor
+knn_model_meta = load('models/knn_model_meta.joblib')
+
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'resume' not in request.files:
@@ -43,8 +68,7 @@ def predict():
         return redirect(request.url)
 
     startTime = time.time()
-    # load preprocessed jd
-    jd_processed = load('models/jd_processed.joblib')
+    
     # load and get the text from pdf
     res = pdf2Text(filePath)
     # preprocess resume
@@ -57,10 +81,6 @@ def predict():
     data_feature1 = data_feature.copy()
     data_feature2 = data_feature.copy()
 
-    # load BoW representation of jd
-    bow_jd = load('models/bow_jd.joblib')
-    # load BoW model
-    vectorizer = load('models/vectorizer.joblib')
     # get BoW representation of resume
     bow_resume = vectorizer.transform(data_feature.processed_resume.values).toarray()
     # get cosine similarity and euclidean distance features
@@ -73,14 +93,9 @@ def predict():
     X_bow_3 = pd.DataFrame(bow_resume, columns=['bow_resume_'+str(i) for i in range(1, bow_resume.shape[1]+1)])
     X_bow = pd.concat([X_bow_1, X_bow_2, X_bow_3], axis=1)
     
-    # get selected features after forward feature selection
-    with open('models/selected_features1.npy', 'rb') as f:
-        features1 = np.load(f, allow_pickle=True)
     # filter input according to forward feature selection
     X_bow = X_bow[features1]
     
-    # load w2v representation of jd
-    w2v_jd = load('models/w2v_jd.joblib')
     # get w2v representation of resume
     w2v_resume = np.array([getAverageWord2Vec(data_feature2.processed_resume.values[0])])
     # get cosine similarity and euclidean distance features
@@ -93,23 +108,12 @@ def predict():
     X_w2v_3 = pd.DataFrame(w2v_resume, columns=['w2v_resume_'+str(i) for i in range(1, w2v_resume.shape[1]+1)])
     X_w2v = pd.concat([X_w2v_1, X_w2v_2, X_w2v_3], axis=1)
     
-    # get selected features after forward feature selection
-    with open('models/selected_features2.npy', 'rb') as f:
-        features2 = np.load(f, allow_pickle=True)
     # filter input according to forward feature selection
     X_w2v = X_w2v[features2]
 
-    # load standard scaler for bow
-    scaler1 = load('models/scaler1.joblib')
     X_bow = scaler1.transform(X_bow)
-    # load standard scaler for w2v
-    scaler2 = load('models/scaler2.joblib')
+    
     X_w2v = scaler2.transform(X_w2v)
-
-    # load first base model
-    svr_model_linear_1 = load('models/svr_model_linear_1.joblib')
-    # load second base model
-    lr_model_2 = load('models/lr_model_2.joblib')
 
     # get the ouputs of base model
     X_ensemble = pd.DataFrame({'svr_linear_bow':svr_model_linear_1.predict(X_bow), 
@@ -117,9 +121,6 @@ def predict():
     # load standard scaler for ensemble
     scaler3 = load('models/scaler3.joblib')
     X_ensemble = scaler3.transform(X_ensemble)
-
-    # load meta regressor
-    knn_model_meta = load('models/knn_model_meta.joblib')
 
     # predict the o/p
     prediction = np.round(knn_model_meta.predict(X_ensemble), 2)

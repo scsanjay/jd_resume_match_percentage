@@ -8,6 +8,9 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from fuzzywuzzy import fuzz
 from joblib import load
+    
+# load word2vec model
+w2v_model = load('models/w2v_model.joblib')
 
 def pdf2Text(filename):
     ''' load pdf and return the text'''
@@ -130,8 +133,6 @@ def cosine_euclidean(u, v):
     return np.array([np.dot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v)), np.linalg.norm(u - v)])
 
 def getAverageWord2Vec(sentence):
-    # load word2vec model
-    w2v_model = load('models/w2v_model.joblib')
     w2v_words = list(w2v_model.key_to_index)
     ''' get Average Word2Vec given a sentence'''
     # initialize sentence_vector to zeros
